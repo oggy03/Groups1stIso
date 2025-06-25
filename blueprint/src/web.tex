@@ -1,0 +1,27 @@
+% This file makes a web version of the blueprint
+% It should include all the \usepackage needed for this version.
+% The template includes standard AMS packages.
+% It is otherwise a very minimal preamble (you should probably at least
+% add cleveref and tikz-cd).
+
+\documentclass{report}
+
+\usepackage{amssymb, amsthm, amsmath}
+\usepackage{hyperref}
+\usepackage[showmore, dep_graph]{blueprint}
+
+
+\input{macros/common}
+\input{macros/web}
+
+\home{https://oggy03.github.io/Groups1stIso}
+\github{https://github.com/oggy03/Groups1stIso}
+\dochome{https://oggy03.github.io/Groups1stIso/docs}
+
+\title{Groups1stIso}
+\author{Kai Ogden \and Hongyu Wang}
+
+\begin{document}
+\maketitle
+\input{content}
+\end{document}
