@@ -5,3 +5,172 @@
 % If you want to split the blueprint content into several files then
 % the current file can be a simple sequence of \input. Otherwise It
 % can start with a \section or \chapter for instance.
+
+
+\title{The First Isomorphism Theorem for Groups: A Formal Proof from Axioms}
+\author{}
+\date{}
+
+
+\section{Fundamental Definitions}
+
+\begin{definition}[Group]
+\label{def:group}
+A \textbf{group} is an ordered pair $(G, \cdot)$, where $G$ is a set and $\cdot$ is a binary operation on $G$ satisfying the following axioms:
+\begin{enumerate}
+    \item \textbf{Associativity:} For all $a, b, c \in G$, we have $(a \cdot b) \cdot c = a \cdot (b \cdot c)$.
+    \item \textbf{Identity Element:} There exists an element $e \in G$, called the identity element, such that for all $a \in G$, we have $a \cdot e = e \cdot a = a$.
+    \item \textbf{Inverse Element:} For each $a \in G$, there exists an element $a^{-1} \in G$, called the inverse of $a$, such that $a \cdot a^{-1} = a^{-1} \cdot a = e$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Subgroup]
+\label{def:subgroup}
+Let $(G, \cdot)$ be a group. A subset $H$ of $G$ is a \textbf{subgroup} of $G$, denoted $H \leq G$, if $(H, \cdot)$ is itself a group. This is equivalent to the following conditions:
+\begin{enumerate}
+    \item $H$ is non-empty.
+    \item For all $a, b \in H$, $a \cdot b \in H$ (closure).
+    \item For all $a \in H$, $a^{-1} \in H$ (closure under inverses).
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Group Homomorphism]
+\label{def:homomorphism}
+Let $(G, \cdot_G)$ and $(H, \cdot_H)$ be groups. A function $\phi: G \to H$ is a \textbf{group homomorphism} if for all $a, b \in G$, we have:
+$$ \phi(a \cdot_G b) = \phi(a) \cdot_H \phi(b) $$
+\end{definition}
+
+\begin{definition}[Kernel of a Homomorphism]
+\label{def:kernel}
+Let $\phi: G \to H$ be a group homomorphism. The \textbf{kernel} of $\phi$, denoted $\ker(\phi)$, is the set of elements in $G$ that are mapped to the identity element in $H$.
+$$ \ker(\phi) = \{ g \in G \mid \phi(g) = e_H \} $$
+\end{definition}
+
+\begin{definition}[Image of a Homomorphism]
+\label{def:image}
+Let $\phi: G \to H$ be a group homomorphism. The \textbf{image} of $\phi$, denoted $\text{im}(\phi)$, is the set of elements in $H$ that are the image of some element in $G$.
+$$ \text{im}(\phi) = \{ h \in H \mid \exists g \in G, \phi(g) = h \} $$
+\end{definition}
+
+\begin{definition}[Normal Subgroup]
+\label{def:normal_subgroup}
+A subgroup $N$ of a group $G$ is a \textbf{normal subgroup}, denoted $N \trianglelefteq G$, if for all $g \in G$ and for all $n \in N$, we have $gng^{-1} \in N$.
+\end{definition}
+
+\begin{definition}[Coset]
+\label{def:coset}
+Let $H$ be a subgroup of a group $G$. For any $g \in G$, the \textbf{left coset} of $H$ in $G$ with respect to $g$ is the set $gH = \{gh \mid h \in H\}$.
+\end{definition}
+
+\begin{definition}[Quotient Group]
+\label{def:quotient_group}
+Let $N$ be a normal subgroup of a group $G$. The \textbf{quotient group} (or factor group) of $G$ by $N$, denoted $G/N$, is the set of all left cosets of $N$ in $G$, with the binary operation defined by:
+$$ (aN)(bN) = (ab)N $$
+for all $a, b \in G$.
+\end{definition}
+
+\section{Preliminary Lemmas}
+
+\begin{lemma}[Properties of Homomorphisms]
+\label{lem:hom_properties}
+Let $\phi: G \to H$ be a group homomorphism. Then:
+\begin{enumerate}
+    \item $\phi(e_G) = e_H$.
+    \item $\phi(g^{-1}) = (\phi(g))^{-1}$ for all $g \in G$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+\begin{enumerate}
+    \item We have $\phi(e_G) = \phi(e_G \cdot e_G) = \phi(e_G) \cdot \phi(e_G)$. Multiplying by $(\phi(e_G))^{-1}$ on the right in $H$, we get $\phi(e_G)(\phi(e_G))^{-1} = (\phi(e_G)\phi(e_G))(\phi(e_G))^{-1}$, which simplifies to $e_H = \phi(e_G)$.
+    \item For any $g \in G$, we have $e_H = \phi(e_G) = \phi(g \cdot g^{-1}) = \phi(g) \cdot \phi(g^{-1})$. Multiplying on the left by $(\phi(g))^{-1}$, we get $(\phi(g))^{-1} \cdot e_H = (\phi(g))^{-1} \cdot (\phi(g) \cdot \phi(g^{-1}))$, which simplifies to $(\phi(g))^{-1} = \phi(g^{-1})$.
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[The Kernel is a Subgroup]
+\label{lem:kernel_subgroup}
+Let $\phi: G \to H$ be a group homomorphism. Then $\ker(\phi)$ is a subgroup of $G$.
+\end{lemma}
+\begin{proof}
+We verify the three conditions from Definition \ref{def:subgroup}.
+\begin{enumerate}
+    \item By Lemma \ref{lem:hom_properties}, $\phi(e_G) = e_H$, so $e_G \in \ker(\phi)$. Thus, $\ker(\phi)$ is non-empty.
+    \item Let $a, b \in \ker(\phi)$. Then $\phi(a) = e_H$ and $\phi(b) = e_H$. Using the homomorphism property from Definition \ref{def:homomorphism}, we have $\phi(ab) = \phi(a)\phi(b) = e_H e_H = e_H$. Thus, $ab \in \ker(\phi)$.
+    \item Let $a \in \ker(\phi)$. Then $\phi(a) = e_H$. By Lemma \ref{lem:hom_properties}, $\phi(a^{-1}) = (\phi(a))^{-1} = (e_H)^{-1} = e_H$. Thus, $a^{-1} \in \ker(\phi)$.
+\end{enumerate}
+Since all three conditions are satisfied, $\ker(\phi)$ is a subgroup of $G$.
+\end{proof}
+
+\begin{lemma}[The Kernel is a Normal Subgroup]
+\label{lem:kernel_normal}
+Let $\phi: G \to H$ be a group homomorphism. Then $\ker(\phi)$ is a normal subgroup of $G$.
+\end{lemma}
+\begin{proof}
+By Lemma \ref{lem:kernel_subgroup}, we know that $K = \ker(\phi)$ is a subgroup of $G$. We now show it is normal. Let $k \in K$ and $g \in G$. We need to show that $gkg^{-1} \in K$.
+By the definition of the kernel (Definition \ref{def:kernel}), $\phi(k) = e_H$. Using the homomorphism property (Definition \ref{def:homomorphism}) and Lemma \ref{lem:hom_properties}:
+$$ \phi(gkg^{-1}) = \phi(g)\phi(k)\phi(g^{-1}) = \phi(g)e_H(\phi(g))^{-1} = \phi(g)(\phi(g))^{-1} = e_H $$
+Thus, $gkg^{-1} \in K$. Therefore, $\ker(\phi)$ is a normal subgroup of $G$.
+\end{proof}
+
+\begin{lemma}[The Image is a Subgroup]
+\label{lem:image_subgroup}
+Let $\phi: G \to H$ be a group homomorphism. Then $\text{im}(\phi)$ is a subgroup of $H$.
+\end{lemma}
+\begin{proof}
+We verify the three conditions from Definition \ref{def:subgroup}.
+\begin{enumerate}
+    \item By Lemma \ref{lem:hom_properties}, $\phi(e_G) = e_H$, so $e_H \in \text{im}(\phi)$. Thus, $\text{im}(\phi)$ is non-empty.
+    \item Let $h_1, h_2 \in \text{im}(\phi)$. By Definition \ref{def:image}, there exist $g_1, g_2 \in G$ such that $\phi(g_1) = h_1$ and $\phi(g_2) = h_2$. Then $h_1 h_2 = \phi(g_1)\phi(g_2) = \phi(g_1 g_2)$. Since $g_1 g_2 \in G$, $h_1 h_2 \in \text{im}(\phi)$.
+    \item Let $h \in \text{im}(\phi)$. Then there exists $g \in G$ such that $\phi(g) = h$. By Lemma \ref{lem:hom_properties}, $h^{-1} = (\phi(g))^{-1} = \phi(g^{-1})$. Since $g^{-1} \in G$, $h^{-1} \in \text{im}(\phi)$.
+\end{enumerate}
+Since all three conditions are satisfied, $\text{im}(\phi)$ is a subgroup of $H$.
+\end{proof}
+
+\section{The First Isomorphism Theorem}
+
+\begin{theorem}[First Isomorphism Theorem for Groups]
+\label{thm:first_isomorphism}
+Let $\phi: G \to H$ be a group homomorphism. Then the quotient group $G/\ker(\phi)$ is isomorphic to the image of $\phi$, $\text{im}(\phi)$.
+$$ G/\ker(\phi) \cong \text{im}(\phi) $$
+\end{theorem}
+\begin{proof}
+Let $K = \ker(\phi)$. By Lemma \ref{lem:kernel_normal}, $K$ is a normal subgroup of $G$, so the quotient group $G/K$ is well-defined. By Lemma \ref{lem:image_subgroup}, $\text{im}(\phi)$ is a subgroup of $H$.
+
+We define a map $\psi: G/K \to \text{im}(\phi)$ by $\psi(gK) = \phi(g)$ for any coset $gK \in G/K$. To prove the theorem, we must show that $\psi$ is well-defined, is a homomorphism, is injective, and is surjective.
+
+\textbf{1. $\psi$ is well-defined:}
+We need to show that if $aK = bK$ for $a, b \in G$, then $\psi(aK) = \psi(bK)$.
+If $aK = bK$, then $b^{-1}a \in K$.
+By the definition of the kernel (Definition \ref{def:kernel}), $\phi(b^{-1}a) = e_H$.
+Using the homomorphism properties (Definition \ref{def:homomorphism} and Lemma \ref{lem:hom_properties}), we have:
+$$ \phi(b^{-1})\phi(a) = e_H $$
+$$ (\phi(b))^{-1}\phi(a) = e_H $$
+Multiplying on the left by $\phi(b)$ gives:
+$$ \phi(a) = \phi(b) $$
+By our definition of $\psi$, this means $\psi(aK) = \psi(bK)$. Thus, $\psi$ is well-defined.
+
+\textbf{2. $\psi$ is a homomorphism:}
+We need to show that for any two cosets $aK, bK \in G/K$, we have $\psi((aK)(bK)) = \psi(aK)\psi(bK)$.
+Using the definition of the operation in a quotient group (Definition \ref{def:quotient_group}) and the definition of a homomorphism (Definition \ref{def:homomorphism}):
+$$ \psi((aK)(bK)) = \psi((ab)K) = \phi(ab) = \phi(a)\phi(b) = \psi(aK)\psi(bK) $$
+Thus, $\psi$ is a group homomorphism.
+
+\textbf{3. $\psi$ is injective (one-to-one):}
+We need to show that if $\psi(aK) = \psi(bK)$, then $aK = bK$.
+Suppose $\psi(aK) = \psi(bK)$. By the definition of $\psi$, this means $\phi(a) = \phi(b)$.
+Multiplying on the left by $(\phi(a))^{-1}$:
+$$ (\phi(a))^{-1}\phi(b) = e_H $$
+Using the homomorphism properties (Lemma \ref{lem:hom_properties}):
+$$ \phi(a^{-1})\phi(b) = e_H $$
+$$ \phi(a^{-1}b) = e_H $$
+By the definition of the kernel (Definition \ref{def:kernel}), this implies $a^{-1}b \in K$.
+This is the condition for the cosets to be equal: $aK = bK$.
+Thus, $\psi$ is injective.
+
+\textbf{4. $\psi$ is surjective (onto):}
+We need to show that for any element $h \in \text{im}(\phi)$, there exists a coset $gK \in G/K$ such that $\psi(gK) = h$.
+Let $h \in \text{im}(\phi)$. By the definition of the image (Definition \ref{def:image}), there exists some $g \in G$ such that $\phi(g) = h$.
+Consider the coset $gK \in G/K$. Then $\psi(gK) = \phi(g) = h$.
+Thus, for any $h \in \text{im}(\phi)$, we have found a coset in $G/K$ that maps to it. Therefore, $\psi$ is surjective.
+
+Since $\psi$ is a well-defined, bijective homomorphism, it is an isomorphism. We have thus shown that $G/\ker(\phi) \cong \text{im}(\phi)$.
+\end{proof}
