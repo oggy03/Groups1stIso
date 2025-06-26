@@ -18,13 +18,27 @@ structure MySubgroup (G : Type _) [MyGroup G] (H : Set G) where
   inv_closed : ∀ a ∈ H, a⁻¹ ∈ H
 
 structure NormalSubgroup (G : Type _) [MyGroup G] (H : Set G) extends MySubgroup G H where
-
-def trivial (G : Type _) [MyGroup G] : Set G := {1}
+  normal : ∀ (g : G) (h : H) , g * h * g⁻¹ ∈ H
 
 def LeftCoset (G: Type _) [MyGroup G] (H : Set G) (_: MySubgroup G H) (Rep : G) : Set G :=
   {Rep * h | h ∈ H}
 
-def RightCoset (G : Type _) [MyGroup G] (H : Set G) (Rep : G) : Set G :=
+def RightCoset (G : Type _) [MyGroup G] (H : Set G) (_: MySubgroup G H) (Rep : G) : Set G :=
   {h * Rep | h ∈ H}
 
+def trivial (G : Type _) [MyGroup G] : Set G := {1}
+
 end OurGroup
+
+
+namespace OurQuotient
+open OurGroup
+variable {G : Type _} [MyGroup G]
+variable {H : Set G} (n : NormalSubgroup G H)
+
+def QuotientSet : Set (Set G) :=
+  {LeftCoset G H n.toMySubgroup Rep | Rep : G}
+
+
+
+end OurQuotient
