@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 
 namespace OurGroup
+namespace OurGroup
 
 class MyGroup (G: Type _) extends Mul G, One G, Inv G where
   mul_assoc : ∀ a b c : G, (a * b) * c = a * (b * c)
@@ -28,4 +29,5 @@ def RightCoset (G : Type _) [MyGroup G] (H : Set G) (Rep : G) : Set G :=
   {h * Rep | h ∈ H}
 
 
+end OurGroup
 end OurGroup
