@@ -1,6 +1,7 @@
 import Mathlib.Tactic
-import Groups1stIso.Groups.Defs
 import Mathlib.Logic.Function.Defs
+import Mathlib.Data.Set.Image
+import Groups1stIso.Groups.Defs
 
 open OurGroup
 
@@ -16,16 +17,9 @@ class MyGroupIso (f : G → H) extends MyGroupHom f where
   bijective : Function.Bijective f
 
 def Myker [MyGroupHom f] : Set G :=
-  { g : G | f g = 1 }
+  Set.preimage f (Trivial H)
 
 def Myim [MyGroupHom f] : Set H :=
-  { h : H | ∃ (g : G), f g = h }
+  Set.range f
 
 end OurGroupHom
-
-open OurGroupHom
-variable {G H : Type _} [MyGroup G] [MyGroup H]
-variable (f : G → H) [MyGroupHom f]
-
-lemma GroupHompreId : f 1 = 1 := by
-  sorry

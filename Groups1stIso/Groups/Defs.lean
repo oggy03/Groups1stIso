@@ -20,25 +20,44 @@ structure MySubgroup (G : Type _) [MyGroup G] (H : Set G) where
 structure NormalSubgroup (G : Type _) [MyGroup G] (H : Set G) extends MySubgroup G H where
   normal : ∀ (g : G) (h : H) , g * h * g⁻¹ ∈ H
 
-def LeftCoset (G: Type _) [MyGroup G] (H : Set G) (_: MySubgroup G H) (Rep : G) : Set G :=
-  {Rep * h | h ∈ H}
+-- structure LeftCoset (G : Type _) [MyGroup G] (H : Set G) (_: MySubgroup G H) where
+--   Rep : G
+--   elements : Set G := {h' | ∃ h ∈ H, h' = Rep * h}
+
+def LeftCoset  (G : Type _) [MyGroup G] (rep : G) (H : Set G) (_: MySubgroup G H) :
+  Set G := { g' | ∃ h ∈ H, g' = rep * h }
 
 def RightCoset (G : Type _) [MyGroup G] (H : Set G) (_: MySubgroup G H) (Rep : G) : Set G :=
-  {h * Rep | h ∈ H}
+  {h' | ∃ h ∈ H, h' = h * Rep}
 
-def trivial (G : Type _) [MyGroup G] : Set G := {1}
+-- def RightCoset (G : Type _) [MyGroup G] (H : Set G) (_: MySubgroup G H) (Rep : G) : Set G :=
+--   {h * Rep | h ∈ H}
+
+def Trivial (G : Type _) [MyGroup G] : Set G := {1}
 
 end OurGroup
-
 
 namespace OurQuotient
 open OurGroup
 variable {G : Type _} [MyGroup G]
 variable {H : Set G} (n : NormalSubgroup G H)
 
-def QuotientSet : Set (Set G) :=
-  {LeftCoset G H n.toMySubgroup Rep | Rep : G}
+def QuotientSet : Set (Set G) := { s | ∃ g : G, s = LeftCoset G g H n.toMySubgroup }
 
+abbrev Coset := {s : Set G // s ∈ QuotientSet n}
 
+noncomputable def QuotientMul : Coset n → Coset n → Coset n :=
+  fun A B =>
+    -- A and B are pairs: A.val is the set, A.property is the proof it's a coset.
+    -- From A.property, we know `∃ g, A.val = LeftCoset...`. `choose` picks one such `g`.
+    let gA := Classical.choose A.property
+    let gB := Classical.choose B.property
+    -- The resulting set is the coset of the product of the representatives.
+    let C_val := LeftCoset G (gA * gB) H n.toMySubgroup
+    -- We must prove this resulting set is also a valid coset.
+    have C_property : C_val ∈ QuotientSet n := by use (gA * gB)
+    -- The proof is that `gA * gB` is a valid representative.
+    -- Return the new coset, which is the pair of the set and the proof.
+    ⟨C_val, C_property⟩
 
 end OurQuotient
