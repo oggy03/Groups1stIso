@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 
-namespace MyGroup
+namespace OurGroup
 
 class MyGroup (G: Type _) extends Mul G, One G, Inv G where
   mul_assoc : ∀ a b c : G, (a * b) * c = a * (b * c)
@@ -21,4 +21,4 @@ structure MySubgroup (G : Type _) [MyGroup G] (H : Set G) where
 structure NormalSubgroup (G : Type _) [MyGroup G] (H : Set G) extends MySubgroup G H where
   normal : ∀ a b : G, b ∈ H → a * b * a⁻¹ ∈ H
 
-end MyGroup
+end OurGroup
