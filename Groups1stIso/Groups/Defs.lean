@@ -205,21 +205,36 @@ lemma NormEquiv_mul
     (ha : NormEquiv n a₁ a₂) (hb : NormEquiv n b₁ b₂)
     : NormEquiv n (a₁ * b₁) (a₂ * b₂) := by
   dsimp [NormEquiv] at *
-  have : (a₁ * b₁) * (a₂ * b₂)⁻¹ =
-         (a₁ * a₂⁻¹) * (b₁ * b₂⁻¹) := by sorry
-  have h₁ : a₁ * a₂⁻¹ ∈ H := ha
-  have h₂ : b₁ * b₂⁻¹ ∈ H := hb
-  have : (a₁ * b₁) * (a₂ * b₂)⁻¹ ∈ H := by sorry
-  exact this
+  have h1 : a₂ * (b₁ * b₂⁻¹) * a₂⁻¹ ∈ H := n.normal a₂ ⟨b₁ * b₂⁻¹, hb⟩
+  have hprod : (a₁ * a₂⁻¹) * (a₂ * (b₁ * b₂⁻¹) * a₂⁻¹) ∈ H := n.mul_closed (a₁ * a₂⁻¹) (a₂ * (b₁ * b₂⁻¹) * a₂⁻¹) ⟨ha, h1⟩
+  have hequ : a₁ * b₁ * (a₂ * b₂)⁻¹ = (a₁ * a₂⁻¹) * (a₂ * (b₁ * b₂⁻¹) * a₂⁻¹) := by
+    calc a₁ * b₁ * (a₂ * b₂)⁻¹
+      _ = a₁ * b₁ * (b₂⁻¹ * a₂⁻¹) := by rw [inv_mul]
+      _ = a₁ * (b₁ * b₂⁻¹ * a₂⁻¹) := by simp only [MyGroup.mul_assoc]
+      _ = (a₁ * 1) * (b₁ * b₂⁻¹ * a₂⁻¹) := by rw [MyGroup.mul_one a₁]
+      _ = (a₁ * (a₂⁻¹ * a₂)) * (b₁ * b₂⁻¹ * a₂⁻¹) := by rw [MyGroup.mul_left_inv a₂]
+      _ = (a₁ * a₂⁻¹) * (a₂ * (b₁ * b₂⁻¹) * a₂⁻¹) := by simp only [MyGroup.mul_assoc]
+  exact Set.mem_of_eq_of_mem hequ hprod
+
 
 lemma NormEquiv_inv {a b : G} (h : NormEquiv n a b)
   : NormEquiv n a⁻¹ b⁻¹ := by
-  dsimp [NormEquiv] at *
-  refine MySubgroup.mul_closed ?_ a⁻¹ b⁻¹⁻¹ ?_
-  · exact n.toMySubgroup
-  · constructor
-    · sorry
-    · sorry
+  unfold NormEquiv at *
+  have h1: b⁻¹ * (a * b⁻¹) * b⁻¹⁻¹ ∈ H := n.normal b⁻¹ ⟨(a*b⁻¹), h⟩
+  have h2: b⁻¹ * (a * b⁻¹) * b⁻¹⁻¹ = b⁻¹ * a :=
+    calc (b⁻¹ * (a * b⁻¹)) * b⁻¹⁻¹ = (b⁻¹ * (a * b⁻¹)) * b := by rw[inv_inv]
+      _ = b⁻¹ * (a * (b⁻¹ * b)) := by simp only [MyGroup.mul_assoc]
+      _ = b⁻¹ * (a * 1) := by rw [MyGroup.mul_left_inv]
+      _ = b⁻¹ * a := by rw [MyGroup.mul_one]
+  have h3: b⁻¹ * a ∈ H := by
+    rw [← h2]
+    exact h1
+  have h4 : a⁻¹ * b⁻¹⁻¹ = a⁻¹ * b := by rw[inv_inv]
+  rw[h4]
+  have h5: (b⁻¹ * a)⁻¹ ∈ H := n.inv_closed (b⁻¹* a) h3
+  rw [inv_mul, inv_inv] at h5
+  exact h5
+
 
 def MulQuot : MyQuotientGroup n → MyQuotientGroup n → MyQuotientGroup n :=
   Quotient.map₂ (fun a b ↦ a * b)
