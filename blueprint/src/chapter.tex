@@ -1,0 +1,138 @@
+
+\chapter{Algebraic Preliminaries}
+
+\section{Basic structures}
+
+\begin{definition}[Group]\label{def:mygroup}
+\lean{OurGroup.MyGroup}
+A \emph{group} is a type $G$ equipped with a multiplication
+$(\cdot)$, identity element $1$, and inverse $(-)^{-1}$ satisfying
+the usual axioms:
+\[
+(a\cdot b)\cdot c = a\cdot(b\cdot c),
+\quad
+1\cdot a = a = a\cdot1,
+\quad
+a^{-1}\!\cdot a = 1 = a\cdot a^{-1}.
+\]
+\end{definition}
+
+\begin{definition}[Abelian group]\label{def:abegroup}
+\lean{OurGroup.AbeGroup}
+A group $(G,\cdot)$ is \emph{abelian} if $a\cdot b = b\cdot a$ for
+all $a,b\in G$.
+\uses{def:mygroup}
+\end{definition}
+
+\begin{definition}[Subgroup]\label{def:mysubgroup}
+\lean{OurGroup.MySubgroup}
+A subset $H\subseteq G$ is a \emph{subgroup} if it contains the
+identity, is closed under $\cdot$, and closed under inversion.
+\uses{def:mygroup}
+\end{definition}
+
+\begin{definition}[Normal subgroup]\label{def:normalsubgroup}
+\lean{OurGroup.NormalSubgroup}
+A subgroup $H\subseteq G$ is \emph{normal} if $g h g^{-1}\in H$ for
+all $g\in G$ and $h\in H$.
+\uses{mysubgroup}
+\end{definition}
+
+\begin{definition}[Cosets and the trivial subgroup]\label{def:cosets}
+\lean{OurGroup.LeftCoset,OurGroup.RightCoset,OurGroup.Trivial}
+For $H\le G$ and $g\in G$ the \emph{left coset} $gH$ is
+$\{gh\mid h\in H\}$, the \emph{right coset} $Hg$ is
+$\{h g\mid h\in H\}$, and the \emph{trivial subgroup} is
+$\{1\}$.
+\uses{def:mysubgroup}
+\end{definition}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Elementary lemmas}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{lemma}[Left cancellation]\label{lem:left_cancel}
+\lean{OurGroupProp.mul_left_cancel}
+If $a b = a c$ in a group, then $b=c$.
+\uses{def:mygroup}
+\end{lemma}
+
+\begin{lemma}[Inverse of a product]\label{lem:inv_prod}
+\lean{OurGroupProp.inv_mul}
+For all $a,b\in G$ one has $(a b)^{-1} = b^{-1} a^{-1}$.
+\uses{def:mygroup,lem:left_cancel}
+\end{lemma}
+
+%% …include any other lemmas you wish the graph to display …
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Quotient groups}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{definition}[Congruence modulo a normal subgroup]\label{def:normeql}
+\lean{OurQuotient.NormEquiv}
+For $H\trianglelefteq G$ write $a\sim_H b$ when $a b^{-1}\in H$.
+\uses{def:normalsubgroup}
+\end{definition}
+
+\begin{lemma}[Compatibility with multiplication]\label{lem:norm_mul}
+\lean{OurQuotient.NormEquiv_mul}
+If $a_1\sim_H a_2$ and $b_1\sim_H b_2$ then
+$a_1 b_1\sim_H a_2 b_2$.
+\uses{def:normeql,lem:inv_prod}
+\end{lemma}
+
+\begin{definition}[Quotient group]\label{def:quotient_group}
+\lean{OurQuotient.MyQuotientGroup}
+Write $G/H$ for the set of equivalence classes
+under $\sim_H$; it inherits a group structure from~$G$.
+\uses{def:normeql,lem:norm_mul}
+\end{definition}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Homomorphisms}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{definition}[Group homomorphism]\label{def:grouphom}
+\lean{OurGroupHom.MyGroupHom}
+A map $f\colon G\to H$ is a homomorphism if
+$f(ab)=f(a)f(b)$, $f(1)=1$, and $f(a^{-1})=f(a)^{-1}$.
+\uses{def:mygroup}
+\end{definition}
+
+\begin{definition}[Kernel and image]\label{def:ker_img}
+\lean{OurGroupHom.Myker,OurGroupHom.Myim}
+For a homomorphism $f$ the \emph{kernel} is
+$\ker f := \{g\mid f(g)=1\}$ and the \emph{image} is
+$\mathrm{im}\,f := \{f(g)\mid g\in G\}$.
+\uses{def:grouphom,def:triv_sub} %% trival subgroup is in def:cosets
+\end{definition}
+
+\begin{lemma}[Kernel is normal]\label{lem:ker_normal}
+\lean{OurFirstIso.Myker_is_normal}
+$\ker f$ is a normal subgroup of $G$.
+\uses{def:ker_img,def:normalsubgroup}
+\end{lemma}
+
+\begin{lemma}[Image is a subgroup]\label{lem:img_group}
+\lean{OurFirstIso.Myim_is_group}
+$\mathrm{im}\,f$ inherits a group structure from $H$.
+\uses{def:ker_img}
+\end{lemma}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The first isomorphism theorem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{theorem}[First Isomorphism Theorem]\label{thm:first_iso}
+\lean{OurFirstIso.FirstIsoTheorem}
+\uses{def:quotient_group,lem:ker_normal,lem:img_group}
+There exists a natural isomorphism
+\[
+G/\ker f\;\;\cong\;\;\mathrm{im}\,f .
+\]
+\end{theorem}
